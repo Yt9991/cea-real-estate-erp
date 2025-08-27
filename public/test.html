@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2487.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;PWA + OCR Test&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="manifest" href="/manifest.json"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="theme-color" content="#422d2a"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body { font-family: Arial, sans-serif; padding: 20px; background: #f8f6f4; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.container { max-width: 800px; margin: 0 auto; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card { background: white; padding: 20px; border-radius: 10px; margin: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button { background: #422d2a; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 10px 0; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button:hover { background: #6b513f; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.success { color: green; font-weight: bold; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.error { color: red; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="container"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1&gt;CEA Real Estate ERP - PWA + OCR Test&lt;/h1&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2&gt;PWA Features Test&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;Service Worker Status: &lt;span id="sw-status"&gt;Checking...&lt;/span&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;Install Status: &lt;span id="install-status"&gt;Checking...&lt;/span&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="install-btn" style="display:none;"&gt;Install App&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2&gt;Camera Test&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="camera-btn"&gt;Test Camera Access&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="camera-result"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;video id="video" style="width:100%; max-width:400px; display:none;" autoplay&gt;&lt;/video&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2&gt;OCR Simulation&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="ocr-btn"&gt;Simulate OCR Processing&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="ocr-result"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// PWA Install functionality</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let deferredPrompt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const installBtn = document.getElementById('install-btn');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const installStatus = document.getElementById('install-status');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.addEventListener('beforeinstallprompt', (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>e.preventDefault();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>deferredPrompt = e;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>installBtn.style.display = 'block';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>installStatus.textContent = 'Ready to install';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>installStatus.className = 'success';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>installBtn.addEventListener('click', async () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (deferredPrompt) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>deferredPrompt.prompt();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const { outcome } = await deferredPrompt.userChoice;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>installStatus.textContent = `Install ${outcome}`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>deferredPrompt = null;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>installBtn.style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Service Worker check</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if ('serviceWorker' in navigator) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>navigator.serviceWorker.register('/sw.js')</p>
+<p class="p1"><span class="Apple-converted-space">                </span>.then(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>document.getElementById('sw-status').textContent = 'Active';</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>document.getElementById('sw-status').className = 'success';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>})</p>
+<p class="p1"><span class="Apple-converted-space">                </span>.catch(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>document.getElementById('sw-status').textContent = 'Failed';</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>document.getElementById('sw-status').className = 'error';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Camera test</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('camera-btn').addEventListener('click', async () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const stream = await navigator.mediaDevices.getUserMedia({ video: true });</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const video = document.getElementById('video');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>video.srcObject = stream;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>video.style.display = 'block';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById('camera-result').innerHTML = '&lt;p class="success"&gt;Camera access granted!&lt;/p&gt;';</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>stream.getTracks().forEach(track =&gt; track.stop());</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>video.style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}, 3000);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} catch (err) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById('camera-result').innerHTML = '&lt;p class="error"&gt;Camera access denied&lt;/p&gt;';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// OCR simulation</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('ocr-btn').addEventListener('click', () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const result = document.getElementById('ocr-result');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>result.innerHTML = '&lt;p&gt;Processing...&lt;/p&gt;';</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>result.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="success"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3&gt;Extracted Data (Demo):&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p&gt;&lt;strong&gt;Name:&lt;/strong&gt; TAN WEI MING&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p&gt;&lt;strong&gt;NRIC:&lt;/strong&gt; S1234567A&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p&gt;&lt;strong&gt;Address:&lt;/strong&gt; 123 Orchard Road, Singapore&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p&gt;&lt;strong&gt;Phone:&lt;/strong&gt; 91234567&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}, 2000);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Check if already installed</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (window.matchMedia('(display-mode: standalone)').matches) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>installStatus.textContent = 'Already installed';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>installStatus.className = 'success';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>

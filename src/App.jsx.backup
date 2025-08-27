@@ -1,0 +1,55 @@
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
+
+// Pages  
+import Login from './pages/auth/Login'
+import Dashboard from './pages/Dashboard'
+import ComprehensiveFormsSystem from './pages/forms/ComprehensiveFormsSystem'
+
+// Context
+import { AuthProvider } from './contexts/AuthContext'
+
+// Mock authentication check
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem('cea_auth_token')
+  return isAuthenticated ? children : <Navigate to="/login" />
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Toaster position="top-right" />
+          
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            
+            <Route
+              path="/forms"
+              element={
+                <PrivateRoute>
+                  <ComprehensiveFormsSystem />
+                </PrivateRoute>
+              }
+            />
+            
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
+  )
+}
+
+export default App

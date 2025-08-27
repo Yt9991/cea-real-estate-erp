@@ -1,0 +1,24 @@
+{
+  "name": "CEA Real Estate ERP",
+  "short_name": "CEA ERP",
+  "description": "Complete Real Estate Management System",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f6f4",
+  "theme_color": "#422d2a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "en-SG"
+}
