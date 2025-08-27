@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import NavigationHeader from "../components/NavigationHeader"
 import CPDDashboard from '../components/compliance/CPDDashboard'
+import OCRCamera from '../components/OCRCamera'
 import { supabase } from '../lib/supabase'
 import { toast } from 'react-hot-toast'
 
@@ -134,6 +135,13 @@ const Dashboard = () => {
     }
   }
 
+  const handleOCRDataExtracted = (data) => {
+    console.log('OCR Data extracted:', data)
+    toast.success('Document data extracted successfully!')
+    // You can process the extracted data here
+    // For example, pre-fill forms or save to database
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -164,14 +172,14 @@ const Dashboard = () => {
       <NavigationHeader currentPage="dashboard" />
 
       {/* Main Dashboard Content */}
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-4 sm:p-6">
         {/* System Status */}
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
               <span className="text-green-800 font-medium">System Status: Online</span>
-              <span className="text-green-600 text-sm">• All services operational</span>
+              <span className="text-green-600 text-sm hidden sm:inline">• All services operational</span>
             </div>
             <button 
               onClick={handleLogout}
@@ -184,7 +192,7 @@ const Dashboard = () => {
 
         {/* Welcome Section */}
         <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-4 gap-4">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 Welcome back, {userProfile.user_name}!
@@ -208,7 +216,7 @@ const Dashboard = () => {
           </div>
           
           {/* Quick Stats */}
-          <div className="grid md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-blue-50 p-4 rounded-lg">
               <h3 className="text-sm font-medium text-blue-800">Active Clients</h3>
               <p className="text-2xl font-bold text-blue-600">{dashboardStats.clients}</p>
@@ -231,9 +239,10 @@ const Dashboard = () => {
         {/* Navigation Tabs */}
         <div className="bg-white rounded-lg shadow-sm mb-6">
           <div className="border-b border-gray-200">
-            <nav className="flex space-x-8 px-6">
+            <nav className="flex space-x-4 sm:space-x-8 px-4 sm:px-6 overflow-x-auto">
               {[
                 { id: 'overview', label: 'Overview' },
+                { id: 'ocr', label: 'Document Scanner' },
                 { id: 'cpd', label: 'CPD Compliance' },
                 { id: 'clients', label: 'Client Management' },
                 { id: 'properties', label: 'Properties' }
@@ -241,7 +250,7 @@ const Dashboard = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
                     activeTab === tab.id
                       ? 'border-amber-500 text-amber-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -259,13 +268,20 @@ const Dashboard = () => {
           {activeTab === 'overview' && (
             <div className="bg-white rounded-lg p-6 shadow-sm">
               <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-              <div className="grid md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <button 
                   onClick={() => window.location.href = '/forms'}
                   className="p-4 border-2 border-gray-200 rounded-lg hover:border-amber-500 hover:bg-amber-50 transition-colors"
                 >
                   <h4 className="font-semibold text-gray-900">Generate Forms</h4>
                   <p className="text-sm text-gray-600 mt-1">Create CEA-compliant documents</p>
+                </button>
+                <button 
+                  onClick={() => setActiveTab('ocr')}
+                  className="p-4 border-2 border-gray-200 rounded-lg hover:border-amber-500 hover:bg-amber-50 transition-colors"
+                >
+                  <h4 className="font-semibold text-gray-900">Document Scanner</h4>
+                  <p className="text-sm text-gray-600 mt-1">OCR text extraction from images</p>
                 </button>
                 <button 
                   onClick={() => setActiveTab('clients')}
@@ -282,6 +298,20 @@ const Dashboard = () => {
                   <p className="text-sm text-gray-600 mt-1">Track training hours and credits</p>
                 </button>
               </div>
+            </div>
+          )}
+
+          {activeTab === 'ocr' && (
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <h3 className="text-lg font-semibold mb-4">Document OCR Scanner</h3>
+              <p className="text-gray-600 mb-6">
+                Scan NRIC, passport, bank statements, and other documents to automatically extract text data.
+              </p>
+              <OCRCamera 
+                onDataExtracted={handleOCRDataExtracted}
+                documentType="nric"
+                className="border-0 shadow-none p-0"
+              />
             </div>
           )}
 
